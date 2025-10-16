@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - My Treat Bakery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="cart-icon" onclick="toggleCart()">
+        <span class="cart-count" id="cart-count">0</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" class="cart-img">
+    </div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <h3>Your Cart</h3>
+        <ul id="cart-items"></ul>
+        <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+        <button onclick="checkoutCart()" class="checkout-btn">Checkout</button>
+        <button onclick="toggleCart()" class="close-cart">Close</button>
+    </div>
+    <img src="bakery.jpg" alt="Bakery Logo" class="corner-logo">
+    <header>
+        <div class="logo-title">
+            <h1>My Treat Bakery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="menu">
+            <h2>Our Menu</h2>
+            <div class="menu-grid">
+                    <div class="menu-item" id="chocolate-cake">
+                        <a href="chocolate-cake.html">
+                            <img src="cake.jpg" alt="Chocolate Cake">
+                            <h3>Chocolate Cake</h3>
+                        </a>
+                        <p class="item-price"><strong>Price:</strong> $18.00</p>
+                        <p>Rich and moist chocolate cake topped with creamy ganache.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                    <div class="menu-item" id="strawberry-cupcakes">
+                        <a href="strawberry-cupcakes.html">
+                            <img src="Strawberry-Cupcakes.jpg" alt="Strawberry Cupcakes">
+                            <h3>Strawberry Cupcakes</h3>
+                        </a>
+                        <p class="item-price"><strong>Price:</strong> $3.50 each</p>
+                        <p>Fluffy cupcakes with fresh strawberry frosting.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                    <div class="menu-item" id="fresh-baguettes">
+                        <a href="fresh-baguettes.html">
+                            <img src="1-French-Baguettes.webp" alt="Fresh Baguettes">
+                            <h3>Fresh Baguettes</h3>
+                        </a>
+                        <p class="item-price"><strong>Price:</strong> $4.00</p>
+                        <p>Classic French baguettes with a crispy crust and soft inside.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                    <div class="menu-item" id="blueberry-muffins">
+                        <a href="blueberry-muffins.html">
+                            <img src="blueberry-muffin.jpg" alt="Blueberry Muffins">
+                            <h3>Blueberry Muffins</h3>
+                        </a>
+                        <p class="item-price"><strong>Price:</strong> $2.75 each</p>
+                        <p>Moist muffins bursting with fresh blueberries.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 My Treat Bakery. All rights reserved.</p>
+    </footer>
+</body>
+<script>
+// Cart logic
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function updateCartDisplay() {
+    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} <span>$${(item.price * item.qty).toFixed(2)} (${item.qty})</span>`;
+        cartItems.appendChild(li);
+        total += item.price * item.qty;
+    });
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('open');
+}
+function checkoutCart() {
+    alert('Thank you for your order!');
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    toggleCart();
+}
+function addToCart(name, price) {
+    const found = cart.find(item => item.name === name);
+    if (found) {
+        found.qty += 1;
+    } else {
+        cart.push({ name, price, qty: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const item = this.closest('.menu-item');
+            let name = item.querySelector('h3').textContent;
+            let price = parseFloat(item.querySelector('.item-price').textContent.replace(/[^\d.]/g, ''));
+            addToCart(name, price);
+        });
+    });
+});
+</script>
+</body>
+</html>

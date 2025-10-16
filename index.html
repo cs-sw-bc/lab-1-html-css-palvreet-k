@@ -1,0 +1,166 @@
+</body>
+<script>
+// Cart logic
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function updateCartDisplay() {
+    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} <span>$${(item.price * item.qty).toFixed(2)} (${item.qty})</span>`;
+        cartItems.appendChild(li);
+        total += item.price * item.qty;
+    });
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('open');
+}
+function checkoutCart() {
+    alert('Thank you for your order!');
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    toggleCart();
+}
+function addToCart(name, price) {
+    const found = cart.find(item => item.name === name);
+    if (found) {
+        found.qty += 1;
+    } else {
+        cart.push({ name, price, qty: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const item = this.closest('.menu-item');
+            let name = item.querySelector('h3').textContent;
+            let price = parseFloat(item.querySelector('.item-price').textContent.replace(/[^\d.]/g, ''));
+            addToCart(name, price);
+        });
+    });
+});
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Treat Bakery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="cart-icon" onclick="toggleCart()">
+        <span class="cart-count" id="cart-count">0</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" class="cart-img">
+    </div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <h3>Your Cart</h3>
+        <ul id="cart-items"></ul>
+        <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+        <button onclick="checkoutCart()" class="checkout-btn">Checkout</button>
+        <button onclick="toggleCart()" class="close-cart">Close</button>
+    </div>
+    <header>
+        <div class="logo-title">
+            <h1>My Treat Bakery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="home">
+            <h2>Welcome to My Treat!</h2>
+            <p>Delicious cakes, pastries, and breads made fresh daily.Delicious cakes, pastries, and breads made fresh daily.Delicious cakes, pastries, and breads made fresh daily.Delicious cakes, pastries, and breads made fresh daily.Delicious cakes, pastries, and breads made fresh daily.Delicious cakes, pastries, and breads made fresh daily.</p>
+                <div class="slideshow-container">
+                    <div class="slide fade">
+                        <a href="menu.html#chocolate-cake">
+                            <img src="cake.jpg" alt="Chocolate Cake">
+                        </a>
+                    </div>
+                    <div class="slide fade">
+                        <a href="menu.html#strawberry-cupcakes">
+                            <img src="Strawberry-Cupcakes.jpg" alt="Strawberry Cupcakes">
+                        </a>
+                    </div>
+                    <div class="slide fade">
+                        <a href="menu.html#fresh-baguettes">
+                            <img src="1-French-Baguettes.webp" alt="Fresh Baguettes">
+                        </a>
+                    </div>
+                    <div class="slide fade">
+                        <a href="menu.html#blueberry-muffins">
+                            <img src="blueberry-muffin.jpg" alt="Blueberry Muffins">
+                        </a>
+                    </div>
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    <div class="dots">
+                        <span class="dot" onclick="currentSlide(1)"></span>
+                        <span class="dot" onclick="currentSlide(2)"></span>
+                        <span class="dot" onclick="currentSlide(3)"></span>
+                        <span class="dot" onclick="currentSlide(4)"></span>
+                    </div>
+                </div>
+                <script>
+                let slideIndex = 1;
+                showSlides(slideIndex);
+
+                function plusSlides(n) {
+                    showSlides(slideIndex += n);
+                }
+
+                function currentSlide(n) {
+                    showSlides(slideIndex = n);
+                }
+
+                function showSlides(n) {
+                    let i;
+                    let slides = document.getElementsByClassName("slide");
+                    let dots = document.getElementsByClassName("dot");
+                    if (n > slides.length) {slideIndex = 1}
+                    if (n < 1) {slideIndex = slides.length}
+                    for (i = 0; i < slides.length; i++) {
+                        slides[i].style.display = "none";
+                    }
+                    for (i = 0; i < dots.length; i++) {
+                        dots[i].className = dots[i].className.replace(" active", "");
+                    }
+                    slides[slideIndex-1].style.display = "block";
+                    dots[slideIndex-1].className += " active";
+                }
+                </script>
+        </section>
+            </div>
+        </section>
+    </main>
+    <img src="bakery.jpg" alt="Bakery Logo" class="corner-logo">
+    <header>
+        <div class="logo-title">
+            <h1>My Treats Bakery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <footer>
+        <p>&copy; 2025 My Treat Bakery. All rights reserved.</p>
+    </footer>

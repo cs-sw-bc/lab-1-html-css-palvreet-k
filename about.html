@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Sweet Treats Bakery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="cart-icon" onclick="toggleCart()">
+        <span class="cart-count" id="cart-count">0</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" class="cart-img">
+    </div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <h3>Your Cart</h3>
+        <ul id="cart-items"></ul>
+        <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+        <button onclick="checkoutCart()" class="checkout-btn">Checkout</button>
+        <button onclick="toggleCart()" class="close-cart">Close</button>
+    </div>
+    <img src="bakery.jpg" alt="Bakery Logo" class="corner-logo">
+    <header>
+        <div class="logo-title">
+            <h1>My Treat Bakery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="about">
+            <h2>About Us</h2>
+            <p>We are a family-owned bakery passionate about baking the best treats in town. Our mission is to bring joy to our community with delicious, fresh, and beautiful baked goods. Visit us for a sweet experience and a warm welcome!</p>
+            <p>Founded in 2010, My Treat Bakery has become a local favorite for cakes, pastries, breads, and more. We use only the finest ingredients and traditional recipes to ensure every bite is memorable.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 My Treat Bakery. All rights reserved.</p>
+    </footer>
+</body>
+<script>
+// Cart logic
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function updateCartDisplay() {
+    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} <span>$${(item.price * item.qty).toFixed(2)} (${item.qty})</span>`;
+        cartItems.appendChild(li);
+        total += item.price * item.qty;
+    });
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('open');
+}
+function checkoutCart() {
+    alert('Thank you for your order!');
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    toggleCart();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+});
+</script>
+</body>
+</html>

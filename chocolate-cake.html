@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolate Cake - My Treat Bakery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <img src="bakery.jpg" alt="Bakery Logo" class="corner-logo">
+    <header>
+        <div class="logo-title">
+            <h1>My Treat Bakery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="item-detail">
+            <h2>Chocolate Cake</h2>
+            <img src="cake.jpg" alt="Chocolate Cake" class="item-image">
+            <p class="item-price"><strong>Price:</strong> $18.00</p>
+            <p class="item-desc">Our rich and moist chocolate cake is topped with creamy ganache and made with the finest cocoa for a decadent treat.</p>
+            <button class="add-to-cart">Add to Cart</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 My Treat Bakery. All rights reserved.</p>
+    </footer>
+</body>
+<script>
+// Cart logic
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function updateCartDisplay() {
+    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} <span>$${(item.price * item.qty).toFixed(2)} (${item.qty})</span>`;
+        cartItems.appendChild(li);
+        total += item.price * item.qty;
+    });
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('open');
+}
+function checkoutCart() {
+    alert('Thank you for your order!');
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    toggleCart();
+}
+function addToCart(name, price) {
+    const found = cart.find(item => item.name === name);
+    if (found) {
+        found.qty += 1;
+    } else {
+        cart.push({ name, price, qty: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let name = document.querySelector('.item-detail h2').textContent;
+            let price = parseFloat(document.querySelector('.item-price').textContent.replace(/[^\d.]/g, ''));
+            addToCart(name, price);
+        });
+    });
+});
+</script>
+</body>
+</html>

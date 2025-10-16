@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - My Treat Bakery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="cart-icon" onclick="toggleCart()">
+        <span class="cart-count" id="cart-count">0</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" class="cart-img">
+    </div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <h3>Your Cart</h3>
+        <ul id="cart-items"></ul>
+        <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+        <button onclick="checkoutCart()" class="checkout-btn">Checkout</button>
+        <button onclick="toggleCart()" class="close-cart">Close</button>
+    </div>
+    <img src="bakery.jpg" alt="Bakery Logo" class="corner-logo">
+    <header>
+        <div class="logo-title">
+            <h1>My Treat Bakery</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="contact-info">
+            <h2>Contact Us</h2>
+            <p>Email: info@mytreat.com</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>Address: 123 Main Street, Sweet City</p>
+        </section>
+        <section id="team-culture">
+            <h2>Meet Our Team</h2>
+            <p>Our dedicated team works together in harmony, ensuring every treat is made with care and passion. We believe in optimizing our work culture for efficiency, creativity, and joy in the kitchen!</p>
+            <div class="slideshow-container team-slideshow">
+                <div class="slide fade">
+                    <img src="teams.jpg" alt="Team Baking Together">
+                </div>
+                <div class="slide fade">
+                    <img src="istockphoto-1204117380-1024x1024.jpg" alt="Team Decorating Cakes">
+                </div>
+                <div class="slide fade">
+                    <img src="person.jpg" alt="Team in Kitchen">
+                </div>
+                <a class="prev" onclick="plusSlides(-1, 'team')">&#10094;</a>
+                <a class="next" onclick="plusSlides(1, 'team')">&#10095;</a>
+                <div class="dots">
+                    <span class="dot" onclick="currentSlide(1, 'team')"></span>
+                    <span class="dot" onclick="currentSlide(2, 'team')"></span>
+                    <span class="dot" onclick="currentSlide(3, 'team')"></span>
+                </div>
+            </div>
+        </section>
+        <section id="feedback">
+            <h2>Feedback</h2>
+            <form class="feedback-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 My Treat Bakery. All rights reserved.</p>
+    </footer>
+</body>
+<script>
+// Cart logic
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function updateCartDisplay() {
+    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} <span>$${(item.price * item.qty).toFixed(2)} (${item.qty})</span>`;
+        cartItems.appendChild(li);
+        total += item.price * item.qty;
+    });
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('open');
+}
+function checkoutCart() {
+    alert('Thank you for your order!');
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    toggleCart();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+});
+</script>
+    <script>
+    // Team slideshow logic
+    let teamSlideIndex = 1;
+    showSlides(teamSlideIndex, 'team');
+    function plusSlides(n, type) {
+        showSlides(teamSlideIndex += n, type);
+    }
+    function currentSlide(n, type) {
+        showSlides(teamSlideIndex = n, type);
+    }
+    function showSlides(n, type) {
+        let slides, dots;
+        if(type === 'team') {
+            slides = document.querySelectorAll('.team-slideshow .slide');
+            dots = document.querySelectorAll('.team-slideshow .dot');
+        } else {
+            slides = document.getElementsByClassName('slide');
+            dots = document.getElementsByClassName('dot');
+        }
+        if (n > slides.length) { teamSlideIndex = 1; }
+        if (n < 1) { teamSlideIndex = slides.length; }
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = 'none';
+        }
+        for (let i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(' active', '');
+        }
+        slides[teamSlideIndex-1].style.display = 'block';
+        dots[teamSlideIndex-1].className += ' active';
+    }
+    </script>
+</body>
+</html>
